@@ -1,0 +1,150 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <title>treetable  By 孙浩然</title>
+  <link rel="stylesheet" href="css/amazeui.min.css"/>
+  <script src="js/jquery.min.js"></script>
+
+  <style type="text/css">
+	
+  </style>
+</head>
+<body>
+
+	<div class="am-g am-g-fixed" >
+		<div class="am-u-sm-12">
+			<table class="am-table" id="tree">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>内容</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="r_0"  children='[]' status="N" >
+						<td>1</td>
+						<td>草你妈</td>
+						<td><a>展开</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+<hr/>
+<center>
+Powered By 孙浩然
+</center>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	//模拟后台数据
+	var data = [{"id":1,"content":"1","opt":"1"},{"id":2,"content":"1","opt":"2"}];
+	var data2 = [{"id":1,"content":"2","opt":"1"},{"id":2,"content":"2","opt":"2"}];
+	var data3 = [{"id":1,"content":"3","opt":"1"},{"id":2,"content":"3","opt":"2"}];
+	
+	//预定义颜色空间
+	var colors = ['#ddd','#ccc','#bbb','#aaa'];
+	
+	//初始化table方法
+	init();
+	function init(){
+		//获取后台数据  data
+		//生成tr标签
+		var html = '';
+		for(var i=0;i<data.length;i++){
+			html += gen_tr(data[i],'r_'+i);
+		}
+		
+		//渲染
+		$('#tree tbody').html(html);
+		
+	}
+	
+	//展开操作
+	function action(e){
+	
+		var tr_id = $(e).parent().parent().attr('id');
+		
+		var biz_id = $(e).attr("biz");
+		
+		var childs = $('#'+tr_id).attr("children");
+		childs =  JSON.parse(childs);
+		
+		var status = $('#'+tr_id).attr("status");
+		
+		if(status == 'Y'){
+			hide(tr_id,childs.length);
+			$(e).text('展开');
+			$("#"+tr_id).attr("status","N");
+			return;
+		}
+		
+		//根据biz获取后台数据 data
+		//alert(biz_id);
+		
+		if(childs.length == 0){
+			//后台获取数据
+		}else{
+			//使用缓存，当然也可以去后台刷新数据
+			
+		}
+		
+		//生成子级tr
+		html = '';
+		for(var i=0;i<data2.length;i++){
+			html += gen_tr(data2[i],tr_id+'_'+i);
+		}
+		
+		//渲染
+		$("#"+tr_id).after(html).fadeIn();
+		
+		//缓存到标签
+		$("#"+tr_id).attr("children",JSON.stringify(data2));
+		
+		//修改状态
+		$(e).text('关闭');
+		$("#"+tr_id).attr("status","Y");
+	}
+	
+	//关闭--正则选择器。。。pid_开头的都关闭
+	function hide(pid,count){
+		for(var i=0;i<count;i++){
+			$('#tree tr[id^='+pid+'_]').hide();
+		}
+	}
+	
+	//生成每一行tr代码
+	function gen_tr(obj,element_id){
+	
+		var ids = element_id.split('_');
+		var color  ='#ccc';
+		color = colors[ids.length - 2];
+		
+		var html = "";
+		
+			html += '<tr id="'+element_id+'" children="[]" status="N" style="background-color:'+color+'">';
+			
+			html += '<td>';
+			html += obj.id;
+			html += "</td>";
+			
+			html += '<td>';
+			html += obj.content;
+			html += "</td>";
+			
+			html += '<td><a biz="'+obj.opt+'" onclick="action(this)">展开</a></td>';
+			
+			html += '</tr>';
+				
+		return html;
+	}
+
+</script>
