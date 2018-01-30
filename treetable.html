@@ -127,13 +127,18 @@ Powered By 孙浩然
 		var ids = element_id.split('_');
 		var color  ='#ccc';
 		color = colors[ids.length - 2];
+		var tab = "";
+		for(var x =0;x<ids.length - 2;x++){
+			tab += "--";
+		}
+		
 		
 		var html = "";
 		
 			html += '<tr id="'+element_id+'" children="[]" status="N" style="background-color:'+color+'">';
 			
 			html += '<td>';
-			html += obj.id;
+			html += tab + obj.id;
 			html += "</td>";
 			
 			html += '<td>';
